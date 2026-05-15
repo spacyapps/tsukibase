@@ -1,52 +1,166 @@
-import Image from 'next/image';
-import Navbar from '@/components/Navbar';
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import Starfield from "./_components/Starfield";
+import Reticle from "./_components/Reticle";
+import CommPings from "./_components/CommPings";
+import TelemetryTicker from "./_components/TelemetryTicker";
+import BootOverlay from "./_components/BootOverlay";
+import PhaseGlyph from "./_components/PhaseGlyph";
+import {
+  useJSTClock,
+  useTypewriter,
+  moonPhaseFraction,
+  moonPhaseName,
+} from "./_components/hooks";
 
 export default function Home() {
+  const frameRef = useRef<HTMLDivElement>(null);
+  const [booting, setBooting] = useState(false);
+  const { jstString, jstDate, date: now } = useJSTClock();
+
+  useEffect(() => {
+    function onMove(e: MouseEvent) {
+      const f = frameRef.current;
+      if (!f) return;
+      const r = f.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      f.style.setProperty("--px", px.toFixed(3));
+      f.style.setProperty("--py", py.toFixed(3));
+    }
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
+
+  const tw = useTypewriter("ようこそ、月\n基地へ", { speed: 130, startDelay: 500 });
+  const phaseFrac = useMemo(() => moonPhaseFraction(now), [now]);
+  const phaseStr = useMemo(() => moonPhaseName(phaseFrac), [phaseFrac]);
+
+  const [solar, setSolar] = useState(97.2);
+  useEffect(() => {
+    const id = setInterval(() => {
+      setSolar((v) => {
+        const next = v + (Math.random() - 0.5) * 0.6;
+        return Math.max(94.5, Math.min(99.4, next));
+      });
+    }, 1100);
+    return () => clearInterval(id);
+  }, []);
+
+  const [signalLevel, setSignalLevel] = useState(4);
+  useEffect(() => {
+    const id = setInterval(() => {
+      setSignalLevel(3 + Math.floor(Math.random() * 2));
+    }, 2500);
+    return () => clearInterval(id);
+  }, []);
+
   return (
-    <main className="min-h-screen bg-black text-white relative overflow-hidden font-sans">
-      
-      {/* HERO BACKGROUND */}
-      <Image
-        src="/hero-bg.jpg"
-        alt="Tsukibase Lunar Base"
-        fill
-        className="object-cover"
-        priority
-        quality={95}
-      />
+    <div className="stage">
+      <div className="frame" ref={frameRef}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="bg" src="/scene.png" alt="" />
 
-      {/* Subtle space vignette */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/30 z-10" />
-
-      {/* NAVIGATION */}
-      <Navbar />
-
-      {/* SMALLER WELCOME PANEL - LEFT SIDE */}
-      <div className="absolute left-6 md:left-12 top-[24%] z-40 max-w-[380px]">
-        <div className="bg-black/80 backdrop-blur-2xl border border-white/10 rounded-3xl p-7 shadow-2xl">
-          
-          <h1 className="text-4xl md:text-5xl font-light leading-none mb-3 tracking-tight">
-            ようこそ、月基地へ
-          </h1>
-          
-          <p className="text-lg md:text-xl mb-1">Welcome to Tsukibase • Lunar Observation Post</p>
-          
-          <p className="text-sm opacity-75 mb-7 leading-relaxed">
-            Monitoring Japan from the Sea of Tranquility.<br />
-            Live feed active. 384,400 km away.
-          </p>
-          
-          <button className="w-full bg-gradient-to-r from-red-600 to-orange-600 py-5 text-lg font-medium tracking-widest rounded-2xl hover:brightness-110 active:scale-95 transition-all">
-            ENTER BASE　入基地
-          </button>
+        <div className="knockout" aria-hidden="true">
+          <div className="ko-top" />
+          <div className="ko-top-fade" />
+          <div className="ko-hero" />
+          <div className="ko-bot" />
+          <div className="ko-bot-fade" />
         </div>
-      </div>
 
-      {/* FOOTER STATS */}
-      <footer className="absolute bottom-6 left-6 right-6 z-50 flex justify-between text-[10px] font-mono uppercase tracking-widest opacity-60">
-        <div>LUNAR CYCLE: WAXING GIBBOUS</div>
-        <div>FEED: 08:42 JST | TEMP: -173°C | SOLAR ARRAY: 97%</div>
-      </footer>
-    </main>
+        <Starfield density={1} />
+        <div className="lantern" />
+        <CommPings intervalMs={2200} />
+
+        <header className="topbar">
+          <div className="brand">
+            <span className="word">TSUKIBASE</span>
+            <span className="kanji">月基地</span>
+          </div>
+          <nav className="nav">
+            <a href="#status" data-en="BASE STATUS" data-jp="基地状況"></a>
+            <a href="#earth" data-en="EARTH VIEW" data-jp="地球眺望"></a>
+            <a href="#log" data-en="LOG" data-jp="記録"></a>
+            <a href="#mission" data-en="MISSION" data-jp="使命">
+              <span className="dot"></span>
+            </a>
+          </nav>
+        </header>
+
+        <section className="hero">
+          <div className="eyebrow">
+            <span className="pip" /> LIVE · SEA OF TRANQUILLITY · 静の海
+          </div>
+          <h1>
+            {tw.text}
+            {!tw.done && <span className="caret" />}
+          </h1>
+          <p className="sub">Welcome to Tsukibase · Lunar Observation Post</p>
+          <p className="desc">
+            Monitoring Japan from the Sea of Tranquillity.
+            <br />
+            Live feed active · {(384400).toLocaleString()} km away.
+          </p>
+          <div className="coords">
+            <span>OBS <b>8.500°N</b></span>
+            <span>LON <b>31.400°E</b></span>
+            <span>JST <b suppressHydrationWarning>{jstString}</b></span>
+            <span>DATE <b suppressHydrationWarning>{jstDate}</b></span>
+          </div>
+          <button
+            className="cta"
+            onClick={(e) => {
+              e.preventDefault();
+              setBooting(true);
+            }}
+          >
+            <span>ENTER BASE</span>
+            <span className="jp">入基地</span>
+          </button>
+          <div className="signal-row">
+            <span>UPLINK</span>
+            <div className="signal-bars">
+              {[1, 2, 3, 4].map((i) => (
+                <i key={i} className={i <= signalLevel ? "on" : ""} />
+              ))}
+            </div>
+            <span>· {signalLevel === 4 ? "EXCELLENT" : "GOOD"}</span>
+          </div>
+        </section>
+
+        <TelemetryTicker intervalMs={1500} />
+
+        <footer className="statusbar">
+          <div className="left">
+            <span className="group">
+              <PhaseGlyph fraction={phaseFrac} />
+              LUNAR CYCLE: <b>{phaseStr}</b>
+            </span>
+          </div>
+          <div className="right">
+            <span className="group">
+              FEED: <b suppressHydrationWarning>{jstString} JST</b>
+            </span>
+            <span className="sep" />
+            <span className="group">
+              TEMP: <b>-173°C</b>
+            </span>
+            <span className="sep" />
+            <span className="group solar">
+              SOLAR ARRAY:
+              <div className="bar">
+                <i style={{ width: `${(solar - 90) / 10 * 100}%` }} />
+              </div>
+              <b>{solar.toFixed(1)}%</b>
+            </span>
+          </div>
+        </footer>
+
+        <Reticle frameRef={frameRef} />
+        <BootOverlay active={booting} onDone={() => setBooting(false)} />
+      </div>
+    </div>
   );
 }
