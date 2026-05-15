@@ -14,7 +14,7 @@ const TELEMETRY_POOL = [
   { type: "info", t: "TORII LANTERN · LUMINANCE 88 CD" },
   { type: "acc",  t: "FEED → tsukibase://obs/12-83-Δ" },
   { type: "ok",   t: "GYRO LOCK · ROLL 0.001° PITCH 0.003°" },
-  { type: "info", t: "TRANQUILLITATIS BASIN · NIGHT-2" },
+  { type: "info", t: "LUNAR BASIN · NIGHT-2 · 8.5°N 31.4°E" },
   { type: "warn", t: "SOLAR WIND 412 KM/S · MILD" },
   { type: "ok",   t: "CRYO COOLANT LOOP A · -195°C" },
   { type: "acc",  t: "上り信号 受信良好" },

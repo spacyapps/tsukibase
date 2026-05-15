@@ -91,7 +91,7 @@ export default function Home() {
 
         <section className="hero">
           <div className="eyebrow">
-            <span className="pip" /> LIVE · SEA OF TRANQUILLITY · 静の海
+            <span className="pip" /> LIVE · 月面観測基地
           </div>
           <h1>
             {tw.text}
@@ -99,9 +99,9 @@ export default function Home() {
           </h1>
           <p className="sub">Welcome to Tsukibase · Lunar Observation Post</p>
           <p className="desc">
-            Monitoring Japan from the Sea of Tranquillity.
+            Monitoring Japan from {(384400).toLocaleString()} km.
             <br />
-            Live feed active · {(384400).toLocaleString()} km away.
+            Live feed active.
           </p>
           <div className="coords">
             <span>OBS <b>8.500°N</b></span>
