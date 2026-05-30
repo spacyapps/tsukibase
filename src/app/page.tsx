@@ -83,7 +83,7 @@ export default function Home() {
             <a href="#status" data-en="BASE STATUS" data-jp="基地状況"></a>
             <a href="#earth" data-en="EARTH VIEW" data-jp="地球眺望"></a>
             <a href="#log" data-en="LOG" data-jp="記録"></a>
-            <a href="#mission" data-en="MISSION" data-jp="使命">
+            <a href="https://www.lunararray.com" data-en="LUNARARRAY" data-jp="ルナアレイ">
               <span className="dot"></span>
             </a>
           </nav>
