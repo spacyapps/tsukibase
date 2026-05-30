@@ -17,7 +17,7 @@ export default function Navbar() {
           <a href="#" className="hover:text-red-400 transition-colors">BASE STATUS</a>
           <a href="#" className="hover:text-red-400 transition-colors">EARTH VIEW</a>
           <a href="#" className="hover:text-red-400 transition-colors">LOG</a>
-          <a href="#" className="hover:text-red-400 transition-colors">MISSION</a>
+          <a href="https://www.lunararray.com" className="hover:text-red-400 transition-colors">LUNARARRAY</a>
         </div>
       </div>
 
