@@ -7,6 +7,7 @@ import CommPings from "./_components/CommPings";
 import TelemetryTicker from "./_components/TelemetryTicker";
 import BootOverlay from "./_components/BootOverlay";
 import PhaseGlyph from "./_components/PhaseGlyph";
+import ViewportRedirect from "@/components/ViewportRedirect";
 import {
   useJSTClock,
   useTypewriter,
@@ -58,6 +59,8 @@ export default function Home() {
 
   return (
     <div className="stage">
+      {/* Hand narrow viewports to the mobile page even when the UA lies. */}
+      <ViewportRedirect to="/mobile" query="(max-width: 1024px)" />
       <div className="frame" ref={frameRef}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="bg" src="/scene.png" alt="" />

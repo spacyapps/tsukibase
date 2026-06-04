@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Starfield from "../_components/Starfield";
+import ViewportRedirect from "@/components/ViewportRedirect";
 import "./mobile.css";
 
 function useJSTTime() {
@@ -28,6 +29,8 @@ export default function MobilePage() {
 
   return (
     <div style={{ position: "relative", minHeight: "100svh", background: "#05060a", overflow: "hidden" }}>
+      {/* Send genuinely wide viewports back to the desktop stage. */}
+      <ViewportRedirect to="/" query="(min-width: 1025px)" />
       <div
         className="mobile-sky"
         aria-hidden="true"
