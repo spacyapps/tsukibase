@@ -79,6 +79,35 @@ export default function BootOverlay({
           <span>{progress}%</span>
         </div>
         {progress === 100 && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 9,
+              marginTop: 16,
+              paddingTop: 14,
+              borderTop: "1px solid rgba(255,255,255,0.12)",
+              fontSize: 10.5,
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "var(--accent)",
+            }}
+          >
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: "var(--accent)",
+                boxShadow: "0 0 8px var(--accent)",
+                flex: "none",
+                animation: "pulse 1.8s ease-in-out infinite",
+              }}
+            />
+            CLEARANCE NOT AVAILABLE · STATION IN LOCK DOWN
+          </div>
+        )}
+        {progress === 100 && (
           <button className="boot-close" onClick={dismiss}>
             CLOSE · 閉じる
           </button>
